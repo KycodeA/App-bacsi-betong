@@ -29,6 +29,32 @@
         
         <section class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-100">
             <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                <i class="fa-solid fa-video text-red-600 mr-2"></i> Tải Lên Video Hệ Thống & Phân Tích
+            </h2>
+            <form id="upload-form" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Chiều rộng làn đường (mét)</label>
+                        <input type="number" id="lane_width" name="lane_width" value="3.5" step="0.1" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Chọn Video mặt đường (Đoạn 500m)</label>
+                        <input type="file" id="video_file" name="video_file" accept="video/*" required class="w-full px-2 py-1.5 border border-gray-300 rounded-lg text-sm bg-gray-50 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    </div>
+                </div>
+                <div class="flex items-center justify-between pt-2">
+                    <button type="submit" id="submit-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition shadow-md flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Bắt đầu phân tích AI
+                    </button>
+                    <div id="loading-status" class="hidden text-sm text-blue-600 font-medium animate-pulse flex items-center gap-2">
+                        <i class="fa-solid fa-spinner animate-spin"></i> Đang trích xuất dữ liệu & chạy mô hình YOLOv8...
+                    </div>
+                </div>
+            </form>
+        </section>
+        
+        <section class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-100">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
                 <i class="fa-solid fa-calculator text-blue-600 mr-2"></i> Nguyên Tắc & Phương Pháp Đánh Giá
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
@@ -59,45 +85,7 @@
                 <p><span class="text-blue-400">opencv-python</span>>=4.8.0   <span class="text-gray-500"># Xử lý trích xuất frame hình và bẻ phối cảnh góc quay</span></p>
                 <p><span class="text-blue-400">numpy</span>>=1.24.0           <span class="text-gray-500"># Tính toán ma trận diện tích hình học thực tế</span></p>
                 <p><span class="text-blue-400">ultralytics</span>>=8.1.0     <span class="text-gray-500"># Khởi chạy mô hình học sâu YOLOv8 nhận diện vết nứt</span></p>
-                <p><span class="text-blue-400">pandas</span>>=2.0.0          <span class="text-gray-500"># Thống kê và cấu trúc dữ liệu đầu ra 100 phân đoạn</span></p>
-            </div>
-        </section>
-
-        <section class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-100">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-gray-900 flex items-center">
-                    <i class="fa-solid fa-code text-green-600 mr-2"></i> Yêu cầu 1: Đoạn Code Xác Định Tỉ Lệ %
-                </h2>
-                <span class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded font-mono">AntiGravity / Python</span>
-            </div>
-            
-            <p class="text-sm text-gray-600 mb-3">
-                Cấu trúc mã nguồn thực hiện chu trình: Cắt ảnh từ video clip, bẻ phối cảnh (Perspective Transform) chuẩn hóa góc quay camera, chạy mô hình và tính tỷ lệ tổn thất trên diện tích thực tế.
-            </p>
-
-            <div class="bg-gray-900 text-gray-100 rounded-lg p-4 font-mono text-xs overflow-x-auto shadow-inner leading-relaxed">
-<pre><span class="text-gray-500"># Quy trình xử lý tự động: Cắt ảnh -> Bẻ phối cảnh -> Dự đoán -> Tính % diện tích</span>
-<span class="text-blue-400">import</span> cv2
-<span class="text-blue-400">import</span> numpy <span class="text-blue-400">as</span> np
-
-<span class="text-yellow-400">def</span> <span class="text-green-400">process_road_video</span>(video_path):
-    cap = cv2.VideoCapture(video_path)
-    <span class="text-gray-500"># 1. Trích xuất frame hình và bẻ phối cảnh để xử lý góc quay từ camera</span>
-    <span class="text-gray-500"># 2. Chạy mô hình (YOLOv8 / UNet) đã được huấn luyện sẵn</span>
-    <span class="text-gray-500"># 3. Phân tách nứt lưới và nứt đơn (Bỏ qua khe nối cố định)</span>
-    
-    ROAD_WIDTH, SEGMENT_LENGTH = <span class="text-purple-400">3.5</span>, <span class="text-purple-400">50.0</span>  <span class="text-gray-500"># Kích thước phân đoạn (mét)</span>
-    total_road_area = ROAD_WIDTH * SEGMENT_LENGTH
-    
-    <span class="text-gray-500"># Tính toán diện tích nứt thực tế</span>
-    crack_mesh_area = get_mesh_area()
-    crack_single_length = get_single_crack_length()
-    crack_single_area = crack_single_length * <span class="text-purple-400">0.3</span> 
-    
-    total_crack_area = crack_mesh_area + crack_single_area
-    percentage = (total_crack_area / total_road_area) * <span class="text-purple-400">100</span>
-    
-    <span class="text-blue-400">return min</span>(round(percentage, <span class="text-purple-400">2</span>), <span class="text-purple-400">100.0</span>)</pre>
+                <p><span class="text-blue-400">flask</span>>=3.0.0           <span class="text-gray-500"># Tạo API Server và giao diện Web</span></p>
             </div>
         </section>
 
@@ -105,14 +93,9 @@
             <div class="sm:flex sm:items-center sm:justify-between mb-6">
                 <div>
                     <h2 class="text-xl font-bold text-gray-900 flex items-center">
-                        <i class="fa-solid fa-table text-indigo-600 mr-2"></i> Yêu cầu 2: Kết Quả Tỉ Lệ % Nứt Theo Từng Phân Đoạn
+                        <i class="fa-solid fa-table text-indigo-600 mr-2"></i> Kết Quả Tỉ Lệ % Nứt Theo Từng Phân Đoạn
                     </h2>
-                    <p class="text-sm text-gray-500 mt-1">Tổng cộng 100 số liệu thu thập từ 10 đoạn mặt đường (mỗi đoạn chia làm 10 phân đoạn 50m).</p>
-                </div>
-                <div class="mt-3 sm:mt-0">
-                    <button onclick="generateRandomData()" class="text-xs bg-indigo-50 text-indigo-600 font-semibold px-3 py-2 rounded-lg border border-indigo-200 hover:bg-indigo-100 transition shadow-xs">
-                        <i class="fa-solid fa-arrows-rotate mr-1"></i> Giả lập lại dữ liệu mẫu
-                    </button>
+                    <p class="text-sm text-gray-500 mt-1" id="table-desc">Hiển thị kết quả phân tích thực tế từ mô hình AI.</p>
                 </div>
             </div>
 
@@ -120,7 +103,7 @@
                 <table class="min-w-full divide-y divide-gray-200 text-sm text-center">
                     <thead class="bg-gray-50 font-semibold text-gray-700">
                         <tr>
-                            <th class="px-3 py-3 border-r border-gray-200 text-left">Đoạn đường</th>
+                            <th class="px-3 py-3 border-r border-gray-200 text-left">Tên File / Đoạn</th>
                             <th class="px-2 py-3">0-50m</th>
                             <th class="px-2 py-3">50-100m</th>
                             <th class="px-2 py-3">100-150m</th>
@@ -134,7 +117,10 @@
                         </tr>
                     </thead>
                     <tbody id="data-table-body" class="divide-y divide-gray-200 bg-white">
-                        </tbody>
+                        <tr>
+                            <td colspan="11" class="px-4 py-8 text-gray-400 italic text-center">Chưa có dữ liệu. Vui lòng tải video lên để phân tích.</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </section>
@@ -147,34 +133,60 @@
     </footer>
 
     <script>
-        function generateRandomData() {
+        document.getElementById('upload-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const loadingStatus = document.getElementById('loading-status');
             const tbody = document.getElementById('data-table-body');
-            tbody.innerHTML = ''; 
-
-            for (let i = 1; i <= 10; i++) {
-                const tr = document.createElement('tr');
-                tr.className = i % 2 === 0 ? 'bg-gray-50/50 hover:bg-gray-100 transition' : 'hover:bg-gray-100 transition';
+            
+            // Hiện trạng thái loading, ẩn nút submit tránh bấm liên tục
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50');
+            loadingStatus.classList.remove('hidden');
+            
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('/analyze_video', {
+                    method: 'POST',
+                    body: formData
+                });
                 
-                // Cột tên đoạn
-                let tdName = `<td class="px-3 py-2.5 font-bold text-gray-900 text-left bg-gray-50 border-r border-gray-200">Đoạn ${i}</td>`;
-                tr.innerHTML += tdName;
-
-                // 10 phân đoạn nhỏ 50m
-                for (let j = 1; j <= 10; j++) {
-                    // Tạo số ngẫu nhiên từ 0.00% đến 12.50% (vết nứt thực tế thường chiếm tỷ lệ nhỏ)
-                    let randomVal = (Math.random() * 12.5).toFixed(2);
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    tbody.innerHTML = ''; // Xóa dòng thông báo trống
                     
-                    // Điểm nhấn màu sắc nếu tỷ lệ nứt lớn (> 8.5%) để báo cáo sinh động
-                    let badgeClass = randomVal > 8.5 ? 'text-red-600 font-semibold' : 'text-gray-700';
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-gray-100 transition font-medium';
                     
-                    tr.innerHTML += `<td class="px-2 py-2.5 ${badgeClass}">${randomVal}%</td>`;
+                    // Cột tên video rút gọn
+                    let shortName = result.filename.length > 20 ? result.filename.substring(0,17) + '...' : result.filename;
+                    let html = `<td class="px-3 py-3 font-bold text-blue-700 text-left bg-blue-50 border-r border-gray-200" title="${result.filename}">${shortName}</td>`;
+                    
+                    // Điền 10 kết quả thực tế nhận từ Flask vào 10 cột
+                    result.percentages.forEach(val => {
+                        let badgeClass = val > 8.5 ? 'text-red-600 font-bold' : 'text-gray-700';
+                        html += `<td class="px-2 py-3 ${badgeClass}">${val}%</td>`;
+                    });
+                    
+                    tr.innerHTML = html;
+                    tbody.appendChild(tr);
+                    document.getElementById('table-desc').innerText = `Phân tích thành công file: ${result.filename}`;
+                } else {
+                    alert('Lỗi từ hệ thống: ' + result.message);
                 }
-                tbody.appendChild(tr);
+            } catch (error) {
+                console.error(error);
+                alert('Có lỗi xảy ra trong quá trình truyền tải hoặc xử lý video!');
+            } finally {
+                // Trả lại trạng thái ban đầu cho nút bấm
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50');
+                loadingStatus.classList.add('hidden');
             }
-        }
-
-        // Tự động kích hoạt khi load trang
-        window.onload = generateRandomData;
+        });
     </script>
 </body>
 </html>
