@@ -1,0 +1,11 @@
+# Thư viện core xử lý ảnh và bẻ phối cảnh góc quay
+opencv-python>=4.8.0
+numpy>=1.24.0
+
+# Thư viện phục vụ huấn luyện và chạy mô hình nhận diện vết nứt (Mức Giỏi - Xuất sắc)
+ultralytics>=8.1.0      # Chạy YOLOv8 nếu nhóm dùng nhận diện Object/Segmentation
+torch>=2.1.0            # Backend Deep Learning cho mô hình
+torchvision>=0.16.0
+
+# Hỗ trợ thống kê dữ liệu đầu ra (Xuất file 100 số liệu sang Excel/CSV)
+pandas>=2.0.0
