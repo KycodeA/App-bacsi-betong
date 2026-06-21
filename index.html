@@ -17,7 +17,7 @@
             <span class="bg-blue-500 text-xs font-bold uppercase px-3 py-1 rounded-full text-white tracking-wider">Bài tập mở</span>
             <h1 class="text-3xl md:text-4xl font-extrabold mt-3">Nhóm 4: Xác Định Tỉ Lệ % Diện Tích Mặt Đường Bị Nứt</h1>
             <p class="text-blue-100 mt-2 text-sm md:text-base max-w-2xl mx-auto">
-                Ứng dụng xử lý ảnh từ clip mặt đường BTXM (10 đoạn x 500m) để tính toán diện tích nứt lưới và nứt đơn theo phân đoạn 50m.
+                Ứng dụng xử lý ảnh từ clip mặt đường BTXM (10 đoạn x 500m) để tính toán diện tích nứt lưới và nứt đơn theo từng phân đoạn 50m.
             </p>
             <div class="mt-4 text-xs text-blue-200">
                 <i class="fa-regular fa-clock mr-1"></i> Hạn nộp: Thứ 2, 22/06/2026
@@ -31,15 +31,35 @@
             <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
                 <i class="fa-solid fa-calculator text-blue-600 mr-2"></i> Nguyên Tắc & Phương Pháp Đánh Giá
             </h2>
-            <div class="grid grid-md md:grid-cols-2 gap-4 text-sm text-gray-600">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
                 <div class="p-4 bg-blue-50/50 rounded-lg border border-blue-100">
                     <strong class="text-blue-900 block mb-1"><i class="fa-solid fa-border-all mr-1"></i> Vết nứt hình lưới:</strong>
-                    Nhận biết bằng mô hình, tiến hành khoanh vùng khu vực nứt và tính toán trực tiếp diện tích vùng bao hành vi.
+                    Nhận biết bằng mô hình, tiến hành khoanh vùng khu vực nứt và tính toán trực tiếp diện tích vùng bao tổn thương.
                 </div>
                 <div class="p-4 bg-indigo-50/50 rounded-lg border border-indigo-100">
                     <strong class="text-indigo-900 block mb-1"><i class="fa-solid fa-arrows-alt-h mr-1"></i> Vết nứt đơn (Ngang, dọc, chéo):</strong>
                     Loại bỏ hoàn toàn các khe nối cố định của mặt đường BTXM. Diện tích được chuẩn hóa: <code class="bg-white px-1.5 py-0.5 rounded border font-mono text-xs text-red-600">S = Chiều dài vết nứt x 0.3m</code>.
                 </div>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-100">
+            <h2 class="text-xl font-bold text-gray-900 mb-3 flex items-center">
+                <i class="fa-solid fa-box-open text-orange-600 mr-2"></i> Môi Trường & Thư Viện Yêu Cầu (Requirements)
+            </h2>
+            <p class="text-sm text-gray-600 mb-4">
+                Hệ thống triển khai trên nền tảng <strong class="text-gray-900">Python 3.10+</strong>. Môi trường có thể thiết lập nhanh chóng qua file <code class="bg-gray-100 px-1.5 py-0.5 rounded border font-mono text-xs text-orange-600">requirements.txt</code>:
+            </p>
+            
+            <div class="bg-gray-900 text-gray-100 rounded-lg p-4 font-mono text-xs space-y-1 shadow-inner">
+                <p class="text-gray-500"># Cú pháp cài đặt nhanh trên Terminal / Command Prompt:</p>
+                <p class="font-bold text-yellow-400">pip install -r requirements.txt</p>
+                <hr class="my-2 border-gray-800">
+                <p class="text-gray-500"># Chi tiết các thư viện cốt lõi cấu hình trong file:</p>
+                <p><span class="text-blue-400">opencv-python</span>>=4.8.0   <span class="text-gray-500"># Xử lý trích xuất frame hình và bẻ phối cảnh góc quay</span></p>
+                <p><span class="text-blue-400">numpy</span>>=1.24.0           <span class="text-gray-500"># Tính toán ma trận diện tích hình học thực tế</span></p>
+                <p><span class="text-blue-400">ultralytics</span>>=8.1.0     <span class="text-gray-500"># Khởi chạy mô hình học sâu YOLOv8 nhận diện vết nứt</span></p>
+                <p><span class="text-blue-400">pandas</span>>=2.0.0          <span class="text-gray-500"># Thống kê và cấu trúc dữ liệu đầu ra 100 phân đoạn</span></p>
             </div>
         </section>
 
@@ -52,7 +72,7 @@
             </div>
             
             <p class="text-sm text-gray-600 mb-3">
-                Dưới đây là cấu trúc mã nguồn thực hiện chu trình: Cắt ảnh từ video clip, bẻ phối cảnh (Perspective Transform) để chuẩn hóa góc quay camera, chạy mô hình nhận diện tổn thương và tính toán tỷ lệ trên diện tích thực tế.
+                Cấu trúc mã nguồn thực hiện chu trình: Cắt ảnh từ video clip, bẻ phối cảnh (Perspective Transform) chuẩn hóa góc quay camera, chạy mô hình và tính tỷ lệ tổn thất trên diện tích thực tế.
             </p>
 
             <div class="bg-gray-900 text-gray-100 rounded-lg p-4 font-mono text-xs overflow-x-auto shadow-inner leading-relaxed">
@@ -77,7 +97,7 @@
     total_crack_area = crack_mesh_area + crack_single_area
     percentage = (total_crack_area / total_road_area) * <span class="text-purple-400">100</span>
     
-    <span class="text-blue-400">return</span> min(round(percentage, <span class="text-purple-400">2</span>), <span class="text-purple-400">100.0</span>)</pre>
+    <span class="text-blue-400">return min</span>(round(percentage, <span class="text-purple-400">2</span>), <span class="text-purple-400">100.0</span>)</pre>
             </div>
         </section>
 
@@ -90,13 +110,13 @@
                     <p class="text-sm text-gray-500 mt-1">Tổng cộng 100 số liệu thu thập từ 10 đoạn mặt đường (mỗi đoạn chia làm 10 phân đoạn 50m).</p>
                 </div>
                 <div class="mt-3 sm:mt-0">
-                    <button onclick="generateRandomData()" class="text-xs bg-indigo-50 text-indigo-600 font-semibold px-3 py-2 rounded-lg border border-indigo-200 hover:bg-indigo-100 transition">
+                    <button onclick="generateRandomData()" class="text-xs bg-indigo-50 text-indigo-600 font-semibold px-3 py-2 rounded-lg border border-indigo-200 hover:bg-indigo-100 transition shadow-xs">
                         <i class="fa-solid fa-arrows-rotate mr-1"></i> Giả lập lại dữ liệu mẫu
                     </button>
                 </div>
             </div>
 
-            <div class="overflow-x-auto border border-gray-200 rounded-lg shadow-sm">
+            <div class="overflow-x-auto border border-gray-200 rounded-lg shadow-xs">
                 <table class="min-w-full divide-y divide-gray-200 text-sm text-center">
                     <thead class="bg-gray-50 font-semibold text-gray-700">
                         <tr>
@@ -129,7 +149,7 @@
     <script>
         function generateRandomData() {
             const tbody = document.getElementById('data-table-body');
-            tbody.innerHTML = ''; // Clear cũ
+            tbody.innerHTML = ''; 
 
             for (let i = 1; i <= 10; i++) {
                 const tr = document.createElement('tr');
@@ -141,11 +161,11 @@
 
                 // 10 phân đoạn nhỏ 50m
                 for (let j = 1; j <= 10; j++) {
-                    // Tạo số ngẫu nhiên từ 0.00% đến 12.50% cho thực tế (vết nứt đường thường chiếm tỷ lệ nhỏ)
+                    // Tạo số ngẫu nhiên từ 0.00% đến 12.50% (vết nứt thực tế thường chiếm tỷ lệ nhỏ)
                     let randomVal = (Math.random() * 12.5).toFixed(2);
                     
-                    // Điểm nhấn màu sắc nếu tỷ lệ nứt cao (> 8%)
-                    let badgeClass = randomVal > 8 ? 'text-red-600 font-semibold' : 'text-gray-700';
+                    // Điểm nhấn màu sắc nếu tỷ lệ nứt lớn (> 8.5%) để báo cáo sinh động
+                    let badgeClass = randomVal > 8.5 ? 'text-red-600 font-semibold' : 'text-gray-700';
                     
                     tr.innerHTML += `<td class="px-2 py-2.5 ${badgeClass}">${randomVal}%</td>`;
                 }
@@ -153,7 +173,7 @@
             }
         }
 
-        // Tự động chạy khi load trang
+        // Tự động kích hoạt khi load trang
         window.onload = generateRandomData;
     </script>
 </body>
